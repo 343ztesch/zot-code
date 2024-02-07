@@ -645,6 +645,19 @@ void rightSide6Ball() {
     EzTempChassis.wait_drive();
 }
 
+void skillsSlap() {
+    slapHang2.tare_position(); // Initialize slapHang2 encoder at 0 degrees
+
+    while (slapHang2.get_position() < 8180
+    ) { //Shoot until 44 shots + change
+        slapHang1.move_velocity(75); 
+        slapHang2.move_velocity(75); 
+        pros::delay(20);
+    }
+    slapHang1.move_velocity(0); 
+    slapHang2.move_velocity(0);
+}
+
 void skillsOptimal() {
     //Start with 45 degree bearing NE, back left wheel as close as possible to corner of tile
     //swerve to face the goal
@@ -652,8 +665,10 @@ void skillsOptimal() {
     EzTempChassis.wait_drive();
     //deploy vert on right
     vertwing2.set_value(true);
+    pros::delay(20);
     //shoot matchloads
-    //do: shoot: while 11w motor at 75/127 while IMU reads less than 23.5 * 360 degrees
+    skillsSlap();
+    pros::delay(20);
     //retract vert wing
     vertwing2.set_value(false);
     //navigate to other side
