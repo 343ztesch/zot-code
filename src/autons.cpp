@@ -42,6 +42,8 @@ const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We d
                              // faster and one side slower, giving better heading correction.
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
+const int CAREFUL_SPEED = 63;// 50% of max speed. Use when navigating around obstacles like triballs or barrier
+                             // pieces.
 
 
 // Left side auton qualification, gets win point
@@ -643,50 +645,37 @@ void rightSide6Ball() {
     EzTempChassis.wait_drive();
 }
 
-void skills() {
+void skillsOptimal() {
     //Start with 45 degree bearing NE, back left wheel as close as possible to corner of tile
     //swerve to face the goal
-    EzTempChassis.set_swing_pid(ez::LEFT_SWING, -60, DRIVE_SPEED);
+    EzTempChassis.set_swing_pid(ez::LEFT_SWING, -60, SWING_SPEED);
     EzTempChassis.wait_drive();
     //deploy vert on right
     vertwing2.set_value(true);
     //shoot matchloads
-    //do: shoot: while 11w motor IMU reads less than 23.5 * 360 degrees
+    //do: shoot: while 11w motor at 75/127 while IMU reads less than 23.5 * 360 degrees
     //retract vert wing
     vertwing2.set_value(false);
-    //navigate to get under bar
-    EzTempChassis.set_swing_pid(ez::LEFT_SWING, 0, DRIVE_SPEED);
+    //navigate to other side
+    EzTempChassis.set_swing_pid(ez::RIGHT_SWING, -135, SWING_SPEED);
     EzTempChassis.wait_drive();
-    EzTempChassis.set_drive_pid(6, DRIVE_SPEED);
+    EzTempChassis.set_drive_pid(96, DRIVE_SPEED);
     EzTempChassis.wait_drive();
-    EzTempChassis.set_swing_pid(ez::RIGHT_SWING, -45, DRIVE_SPEED);
-    EzTempChassis.wait_drive();
-    //drive under bar
-    EzTempChassis.set_drive_pid(56, DRIVE_SPEED);
-    EzTempChassis.wait_drive();
-    //get in front of goal
-    EzTempChassis.set_swing_pid(ez::RIGHT_SWING, -(98 + 15), DRIVE_SPEED);
-    EzTempChassis.wait_drive();
-    EzTempChassis.set_drive_pid(33, DRIVE_SPEED);
-    EzTempChassis.wait_drive();
-    EzTempChassis.set_swing_pid(ez::LEFT_SWING, -98, DRIVE_SPEED);
-    EzTempChassis.wait_drive();
-    //turn so back wings face goal
+    //turn and charge through alley
     EzTempChassis.set_turn_pid(-225, TURN_SPEED);
     EzTempChassis.wait_drive();
-
-    //push twice
-    vertwing1.set_value(true);
-    vertwing2.set_value(true);
-    EzTempChassis.set_drive_pid(-27, 127);
+    EzTempChassis.set_drive_pid(72, DRIVE_SPEED);
     EzTempChassis.wait_drive();
-    EzTempChassis.set_drive_pid(27, DRIVE_SPEED);
+    EzTempChassis.set_swing_pid(ez::RIGHT_SWING, -180, SWING_SPEED);
     EzTempChassis.wait_drive();
-    EzTempChassis.set_drive_pid(-27, 127);
+    EzTempChassis.set_drive_pid(-14, DRIVE_SPEED);
     EzTempChassis.wait_drive();
-
-
-
+    EzTempChassis.set_swing_pid(ez::RIGHT_SWING, -135, SWING_SPEED);
+    EzTempChassis.wait_drive();
+    //side push
+    EzTempChassis.set_drive_pid(-15, 127);
+    EzTempChassis.wait_drive();
     
+
 }
 
